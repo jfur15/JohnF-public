@@ -85,7 +85,7 @@ class TestQuestionProvidingAnswers(TestCase):
         self.assertEqual(mainAsk.teach("No it isn't"), "Please ask a question first")
     
     @requirements(['#0018'])
-    def test_question_teaching_none(self):
+    def test_question_teaching_refuse(self):
         self.assertEqual(mainAsk.ask("What type of triangle is 1 1 1?"), "equilateral")
         self.assertEqual(mainAsk.teach("not"), "I don\'t know about that. I was taught differently")
 
