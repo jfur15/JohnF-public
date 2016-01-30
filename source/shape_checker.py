@@ -4,7 +4,6 @@
 
 The following example code determines if a set of 3 sides of a triangle is equilateral, scalene or iscoceles
 """
-
 def get_triangle_type(a=0, b=0, c=0):
     """
     Determine if the given triangle is equilateral, scalene or Isosceles
