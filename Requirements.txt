@@ -23,3 +23,18 @@
 #0019 The system shall provide a means of updating an answer to the previously asked question.
 #0020 The system shall accept and store answers to previous questions in the form of a string or a function pointer and store it as the generator function.
 #0021 If no previous question has been asked the system shall respond with "Please ask a question first"
+
+
+*When I ask "What time is it?" I want to be given the current date/time so I can stay up to date
+*When I ask "What is the n digit of fibonacci" I want to receive the answer so I don't have to figure it out myself
+*When I ask "What is the n digit of pi" I want to receive the answer so I don't have to figure it out myself
+*When I ask "Please clear memory" I was the application to clear user set questions and answers so I can reset the application
+*When I say "Open the door hal", I want the application to say "I'm afraid I can't do that (user name) so I know that is not an option
+*When I ask "Convert <number> <units> to <units>" I want to receive the converted value and units so I can know the answer.
+*When I ask for a numberic conversion I want at least 10 different units I can convert from/to
+
+*When I ask "What is the square root of x" I want to recieve the answer so I don't have to figure it out myself
+*When I ask "When is the next leap year" I want to receive the answer of the date
+*When I ask "What is my username" I want to receieve an answer or an error
+*When I ask "What is the cube root of x", I want to receive the answer rounded to 3 decimal places
+*When I ask "What do ____ measure", I want to know what the unit measures
