@@ -31,9 +31,18 @@ class TestGetTriangleType(TestCase):
         result = get_triangle_type(0, 2, 2)
         self.assertEqual(result, 'invalid')
         
+    def test_get_triangle_equ_tuple_range_all_int(self):
+        result = get_triangle_type([2, 2, 2])
+        self.assertEqual(result, 'equilateral')
+        
+    def test_get_triangle_total_range_all_int(self):
+        result = get_triangle_type(-1, 2, 2)
+        self.assertEqual(result, 'invalid')
+        
     def test_get_triangle_invalid_type_all_int(self):
         result = get_triangle_type('a', 2, 2)
         self.assertEqual(result, 'invalid')
+
         
     def test_get_triangle_dict_all_int(self):
         result = get_triangle_type(dict(one = 1, two = 1, three = 1))
@@ -68,12 +77,19 @@ class TestGetQuadrilateralType(TestCase):
     def test_get_quadrilateral_dict_all_int(self):
         result = get_quadrilateral_type(dict(one = 1, two = 1, three = 1, four = 1))
         self.assertEqual(result, 'square')
+    def test_get_quadrilateral_tuple_all_int(self):
+        result = get_quadrilateral_type([1,1,1,1])
+        self.assertEqual(result, 'square')
         
 class TestGetQuadrilateralAngleType(TestCase):
     @requirements(['#0003'])
     def test_get_quadrilateral_angle_square_all_int(self):
         result = get_quadrilateral_angle_type(1, 1, 1, 1, 90, 90, 90, 90)
         self.assertEqual(result, 'square')
+    
+    def test_get_quadrilateral_angle_rectangle_disconnected_angles_all_int(self):
+        result = get_quadrilateral_angle_type(1, 2, 1, 2, 90, 100, 90, 90)
+        self.assertEqual(result, 'disconnected')
         
     @requirements(['#0004'])
     def test_get_quadrilateral_angle_square_all_float(self):
@@ -127,4 +143,9 @@ class TestGetQuadrilateralAngleType(TestCase):
         
     def test_get_quadrilateral_angle_angledict_all_int(self):
         result =  get_quadrilateral_angle_type(1, 1, 1, 1, dict(one = 90, two = 90, three = 90, four = 90))
+        self.assertEqual(result, 'square')
+
+
+    def test_get_quadrilateral_angle_tuple_range_all_int(self):
+        result =  get_quadrilateral_angle_type([1, 1, 1, 1], 0, 0, 0, [90, 90, 90, 90])
         self.assertEqual(result, 'square')

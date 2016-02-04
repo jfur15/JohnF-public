@@ -169,8 +169,35 @@ class JobStories(TestCase):
         self.assertEqual(mainAsk.ask("What is the cubic root of 10?"), "2.154")
 
     @story(['When I ask "What do ____ measure", I want to know what the unit measures'])
-    def test_cube_root_job_story(self):
-        self.assertEqual(mainAsk.ask("What do ounces measure?"), "ounces measure weight")
+    def test_measurement_job_story(self):
+        self.assertEqual(mainAsk.ask("What unit do ounces measure?"), "ounces measure weight")
         
-        self.assertEqual(mainAsk.ask("What do feet measure?"), "feet measure length")
+        self.assertEqual(mainAsk.ask("What unit do feet measure?"), "feet measure length")
     
+class TestInherentCoverage(TestCase):
+    def test_non_string_question(self):
+        self.assertRaises(Exception, mainAsk.ask, 100)
+        
+    def test_functionless_answer(self):
+        self.assertEqual(mainAsk.ask("Don't do anything"), "OK")
+        
+    def test_too_many_args(self):
+        self.assertRaises(Exception, mainAsk.ask, "What is the square root of 10 and 20?")
+    
+    def test_no_set_username(self):
+        self.assertEqual(mainAsk.setuser(10), "Please enter a user name")
+        
+    def test_cleared_username(self):
+        mainAsk.ask("Please clear memory")
+        self.assertEqual(mainAsk.ask("Open the door hal"), "No username set")
+        
+    def test_no_last_question(self):
+        mainAsk.ask("Please clear memory")
+        self.assertEqual(mainAsk.correct("Not an answer"), "Please ask a question first")
+        
+    def test_add_question(self):
+        mainAsk.ask("Please clear memory")
+        self.assertEqual(mainAsk.ask("What is the capital of Idaho?"), "I don't know, please provide the answer")
+        mainAsk.correct("Boise")
+        self.assertEqual(mainAsk.ask("What is the capital of Idaho?"), "Boise")
+        

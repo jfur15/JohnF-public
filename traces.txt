@@ -23,7 +23,7 @@ When I ask "When is the next leap year" I want to receive the answer of the date
 test_leap_year_job_story
 
 When I ask "What is the cube root of x", I want to receive the answer rounded to 3 decimal places
-[]
+test_cube_root_job_story
 
 When I ask for a numberic conversion I want at least 10 different units I can convert from/to
 test_converted_value_job_story
@@ -35,7 +35,7 @@ When I ask "What is the n digit of pi" I want to receive the answer so I don't h
 test_pi_job_story
 
 When I ask "What do ____ measure", I want to know what the unit measures
-test_cube_root_job_story
+test_measurement_job_story
 
 When I ask "What time is it?" I want to be given the current date/time so I can stay up to date
 test_time_job_story

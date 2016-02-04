@@ -67,7 +67,7 @@ class Interface(object):
             'What is the cubic root of X': QA("What is the cubic root of X", cbrt),
             'What is the next leap year': QA("What is the next leap year", leapyear),
             'What is my username': QA("What is my username", self.usernamecheck),
-            'What do measure': QA("What do measure", self.unitcheck),
+            'What unit do measure': QA("What unit do measure", self.unitcheck),
         }
         
         self.last_question = None
@@ -76,6 +76,7 @@ class Interface(object):
         self.command_answers = {
             'Please clear memory': QA('Please clear memory', self.__init__),
             'Open the door hal': QA('Open the door hal', self.haloutput),
+            'Don\'t do anything': QA('Don\t do anything', "OK"),
         }
 
         
@@ -89,10 +90,7 @@ class Interface(object):
             if answer.function is None:
                 return answer.value
             else:
-                try:
-                    return answer.function()
-                except:
-                    raise Exception()
+                return answer.function()
         else:
             if (question[-1] != self.question_mark or question.split(' ')[0] not in self.keywords):
                 if question.split(' ')[0] == "Convert":
@@ -165,15 +163,14 @@ class Interface(object):
         return stringval + " " + unit_2
         
     def unitcheck(self, unit_input):
+        print unit_input
         if unit_input in self.weight_units:
             return unit_input + " measure weight"
         elif unit_input in self.length_units:
             return unit_input + " measure length"
-        else:
-            raise Exception("Invalid unit entry.")
 
     def setuser(self, user_name):
-        if user_name is None:
+        if not isinstance(user_name, str):
             return "Please enter a user name"
         else:
             self.username = user_name
