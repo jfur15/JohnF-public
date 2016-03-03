@@ -3,9 +3,11 @@ Test for source.main
 """
 from source.main import Interface
 from unittest import TestCase
+import mock
 from tests.plugins.ReqTracer import requirements, story
-import math, time
+import math, time, subprocess, sys, os.path
 mainAsk = Interface()
+
 
 class TestQuestionSyntax(TestCase):
     @requirements(['#0006'])
@@ -201,3 +203,122 @@ class TestInherentCoverage(TestCase):
         mainAsk.correct("Boise")
         self.assertEqual(mainAsk.ask("What is the capital of Idaho?"), "Boise")
         
+class GitCoverage(TestCase):
+    @mock.patch('subprocess.Popen')
+    def test_is_in_repo(self, m):
+        process_mock = mock.Mock()
+        attrs = {'communicate.return_value' : ('', '')}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("Is the /test/main_test.py in the repo?"), "Yes")
+
+    @mock.patch('subprocess.Popen')
+    def test_is_untracked_in_repo(self, m):
+        process_mock = mock.Mock()
+        attrs = {'communicate.side_effect' : [('',''), ('',''), (os.getcwd() + '/test/main_test.pyc',''), ('','')]}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("Is the /test/main_test.pyc in the repo?"), "No")
+
+    @mock.patch('subprocess.Popen')
+    def test_does_not_exist(self, m):
+        process_mock = mock.Mock()
+        attrs = {'communicate.return_value' : ('', '')}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("Is the /nonexistent.py in the repo?"), "No")
+        
+    @mock.patch('subprocess.Popen')
+    def test_file_path_status_up_to_date(self, m):
+        filepath = "/test/main_test.py"
+        actualfile = "main_test.py"
+        process_mock = mock.Mock()
+        attrs = {'communicate.side_effect' : [ ("", ''), ('', ''), ('', ''), ('', ''), ('', ''), ('', ''),('', ''),('', '')  ]}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("What is the status of " + filepath + "?"), actualfile + " is up to date")   
+    
+    @mock.patch('subprocess.Popen')
+    def test_file_path_status_dirty_repo(self, m):
+        filepath = "/test/main_test.py"
+        actualfile = "main_test.py"
+        process_mock = mock.Mock()
+        attrs = {'communicate.side_effect' : [ ("", ''), ('', ''), ('', ''), ('test/main_test.py', ''), ('', ''), ('', ''),('', ''),('', '')  ]}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("What is the status of " + filepath + "?"), actualfile + " is a dirty repo")   
+
+    @mock.patch('subprocess.Popen')
+    def test_file_path_status_not_checked(self, m):
+        filepath = "/test/main_test.py"
+        actualfile = "main_test.py"
+        process_mock = mock.Mock()
+        attrs = {'communicate.side_effect' : [ ("", ''), ('', ''), (os.getcwd() + '/test/main_test.py', ''), ('', ''), ('', ''), ('', ''),('', ''),('', '')  ]}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("What is the status of " + filepath + "?"), actualfile + " has been not been checked in")   
+
+    @mock.patch('subprocess.Popen')
+    def test_file_path_status_modified_locally(self, m):
+        filepath = "/test/main_test.py"
+        actualfile = "main_test.py"
+        process_mock = mock.Mock()
+        attrs = {'communicate.side_effect' : [ (os.getcwd() + "/test/main_test.py", ''), ('', ''), ('', ''), ('', ''), ('', ''), ('', ''),('', ''),('', '')  ]}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("What is the status of " + filepath + "?"), actualfile + " has been modified locally")   
+
+    @mock.patch('subprocess.Popen')
+    def test_file_path_deal_with(self, m):
+        filepath = "/test/main_test.py"
+        actualfile = "main_test.py"
+        fakestats = "6f697e8cb4cd1fakehash2e44813bf8ea9f65dcb, Wed Jan 24 08:00:00, jfur15"
+        process_mock = mock.Mock()
+        attrs = {'communicate.side_effect' : [ (fakestats, '') ]}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("What is the deal with " + filepath + "?"), fakestats)   
+
+    @mock.patch('subprocess.Popen')
+    def test_file_path_repo_branch(self, m):
+        filepath = "/test/main_test.py"
+        actualfile = "main_test.py"
+        process_mock = mock.Mock()
+        attrs = {'communicate.side_effect' : [ ("branchname1", '') ]}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("What branch is " + filepath + "?"), "branchname1")   
+        
+    @mock.patch('subprocess.Popen')
+    def test_file_path_repo_url(self, m):
+        filepath = "/test/main_test.py"
+        actualfile = "main_test.py"
+        process_mock = mock.Mock()
+        attrs = {'communicate.side_effect' : [ ("https://github.com/OregonTech/repo1", '')  ]}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("Where did " + filepath + " come from?"), "https://github.com/OregonTech/repo1")   
+    
+    def test_file_check_valid_path(self):
+        with self.assertRaises(Exception):
+            mainAsk.ask("What is the status of /uuuu##/*#/#?")
+
+
+    @mock.patch('subprocess.Popen')
+    def test_absolute_path(self, m):
+        process_mock = mock.Mock()
+        attrs = {'communicate.side_effect' : [('',''), ('',''), (os.getcwd() + '/test/main_test.pyc',''), ('','')]}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("Is the test/main_test.PYC in the repo?"), "No")

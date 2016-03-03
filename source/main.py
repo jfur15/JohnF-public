@@ -5,6 +5,9 @@ import difflib
 import copy
 import calendar
 import math
+import string
+import source.git_utils
+import sys, os.path
 NOT_A_QUESTION_RETURN = "Was that a question?"
 UNKNOWN_QUESTION = "I don't know, please provide the answer"
 NO_QUESTION = 'Please ask a question first'
@@ -44,7 +47,7 @@ class Interface(object):
         self.where_dict = {}
         self.who_dict = {}
 
-        self.keywords = ['How', 'What', 'Where', 'Who', "Why"]
+        self.keywords = ['How', 'What', 'Where', 'Who', "Why", "Is"]
         
         self.weight_units = {'pounds' : 453.59237 , 'ounces' :  28.3495231, 'grams' : 1, 'kilograms' : 100}
 
@@ -68,6 +71,11 @@ class Interface(object):
             'What is the next leap year': QA("What is the next leap year", leapyear),
             'What is my username': QA("What is my username", self.usernamecheck),
             'What unit do measure': QA("What unit do measure", self.unitcheck),
+            'Is the FP in the repo': QA("Is the FP in the repo", source.git_utils.is_file_in_repo),
+            'What is the status of FP': QA("What is the status of FP", source.git_utils.get_git_file_info),
+            'What is the deal with FP': QA("What is the deal with FP", source.git_utils.get_file_info),
+            'What branch is FP': QA("What branch is FP", source.git_utils.get_repo_branch),
+            'Where did FP come from': QA("Where did FP come from", source.git_utils.get_repo_url),
         }
         
         self.last_question = None
@@ -92,6 +100,25 @@ class Interface(object):
             else:
                 return answer.function()
         else:
+            
+            filepath = ""
+            for keyword in question[:-1].split(' '):
+                if keyword[0] == "/":
+                    filepath = keyword
+                    beforefirstslash = question.split( "/")[0]
+                    afterfirstslash = question.split( "/", 1)[1]
+                    
+                    tempAfterList = afterfirstslash.split(' ')
+                    
+                    if len(tempAfterList) == 1:
+                        afterfirstslash = "?"
+                    else:
+                        afterfirstslash = afterfirstslash.split(" ", 1)[1]
+                        
+                    question = beforefirstslash + afterfirstslash
+                    
+                    print question
+                    print filepath
             if (question[-1] != self.question_mark or question.split(' ')[0] not in self.keywords):
                 if question.split(' ')[0] == "Convert":
                     return self.conversion(question)
@@ -116,7 +143,10 @@ class Interface(object):
                             return answer.value
                         else:
                             try:
-                                return answer.function(*args)
+                                if filepath != "":
+                                    return answer.function(os.getcwd() + filepath)
+                                else:
+                                    return answer.function(*args)
                             except:
                                 raise Exception("Too many extra parameters")
                 else:

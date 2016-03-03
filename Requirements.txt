@@ -38,3 +38,18 @@
 *When I ask "What is my username" I want to receieve an answer or an error
 *When I ask "What is the cube root of x", I want to receive the answer rounded to 3 decimal places
 *When I ask "What do ____ measure", I want to know what the unit measures
+
+#0100 The system shall return 'Yes' or 'No' when asked 'Is the <file path> in the repo?
+#0101 The system shall return one of the following when asked 'What is the status of <file path>?
+
+         - <file path> has been modified locally
+
+         - <file path> has not been checked in
+
+         - <file path> is a dirty repo
+
+         - <file path> is up to date
+
+#0102 The system shall return '<hash>, <date modified>, <author>' when asked 'What is the deal with <file path>?
+#0103 The system shall return the repo branch when asked 'What branch is <file path>?
+#0104 The system shall return the repo url when asked 'Where did <file path> come from?
