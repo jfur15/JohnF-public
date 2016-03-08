@@ -103,22 +103,12 @@ class Interface(object):
             
             filepath = ""
             for keyword in question[:-1].split(' '):
-                if keyword[0] == "/":
+                if self.containsdot(keyword):
                     filepath = keyword
-                    beforefirstslash = question.split( "/")[0]
-                    afterfirstslash = question.split( "/", 1)[1]
-                    
-                    tempAfterList = afterfirstslash.split(' ')
-                    
-                    if len(tempAfterList) == 1:
-                        afterfirstslash = "?"
-                    else:
-                        afterfirstslash = afterfirstslash.split(" ", 1)[1]
-                        
-                    question = beforefirstslash + afterfirstslash
-                    
-                    print question
-                    print filepath
+                    question1 = question.split(keyword)[0]
+                    question2 = question.split(keyword)[1]
+                    question = question1 + question2
+
             if (question[-1] != self.question_mark or question.split(' ')[0] not in self.keywords):
                 if question.split(' ')[0] == "Convert":
                     return self.conversion(question)
@@ -142,13 +132,17 @@ class Interface(object):
                         if answer.function is None:
                             return answer.value
                         else:
-                            try:
+                            '''try:
                                 if filepath != "":
-                                    return answer.function(os.getcwd() + filepath)
+                                    return answer.function(filepath)
                                 else:
                                     return answer.function(*args)
                             except:
-                                raise Exception("Too many extra parameters")
+                                raise Exception("Too many extra parameters")'''
+                            if filepath != "":
+                                return answer.function(filepath)
+                            else:
+                                return answer.function(*args)
                 else:
                     return UNKNOWN_QUESTION
                     
@@ -233,3 +227,9 @@ class Interface(object):
 
     def __add_answer(self, answer):
         self.question_answers[self.last_question] = QA(self.last_question, answer)
+
+    def containsdot(self, string):
+        for x in string:
+            if x == ".":
+                return True
+        return False

@@ -6,6 +6,7 @@ from unittest import TestCase
 import mock
 from tests.plugins.ReqTracer import requirements, story
 import math, time, subprocess, sys, os.path
+import logging
 mainAsk = Interface()
 
 
@@ -211,7 +212,7 @@ class GitCoverage(TestCase):
         process_mock.configure_mock(**attrs)
         m.return_value = process_mock 
 
-        self.assertEqual(mainAsk.ask("Is the /test/main_test.py in the repo?"), "Yes")
+        self.assertEqual(mainAsk.ask("Is the " + os.getcwd() + "/test/main_test.py in the repo?"), "Yes")
 
     @mock.patch('subprocess.Popen')
     def test_is_untracked_in_repo(self, m):
@@ -220,7 +221,7 @@ class GitCoverage(TestCase):
         process_mock.configure_mock(**attrs)
         m.return_value = process_mock 
 
-        self.assertEqual(mainAsk.ask("Is the /test/main_test.pyc in the repo?"), "No")
+        self.assertEqual(mainAsk.ask("Is the " + os.getcwd() + "/test/main_test.pyc in the repo?"), "No")
 
     @mock.patch('subprocess.Popen')
     def test_does_not_exist(self, m):
@@ -240,18 +241,19 @@ class GitCoverage(TestCase):
         process_mock.configure_mock(**attrs)
         m.return_value = process_mock 
 
-        self.assertEqual(mainAsk.ask("What is the status of " + filepath + "?"), actualfile + " is up to date")   
+        self.assertEqual(mainAsk.ask("What is the status of " + os.getcwd() + filepath + "?"), actualfile + " is up to date")   
     
     @mock.patch('subprocess.Popen')
     def test_file_path_status_dirty_repo(self, m):
         filepath = "/test/main_test.py"
         actualfile = "main_test.py"
         process_mock = mock.Mock()
-        attrs = {'communicate.side_effect' : [ ("", ''), ('', ''), ('', ''), ('test/main_test.py', ''), ('', ''), ('', ''),('', ''),('', '')  ]}
+        attrs = {'communicate.side_effect' : [ ("", ''), ('', ''), ('', ''), (os.getcwd() + 'test/main_test.py', ''), ('', ''), (os.getcwd() + 'test/main_test.py', ''),('', ''),('', '')  ]}
         process_mock.configure_mock(**attrs)
         m.return_value = process_mock 
 
-        self.assertEqual(mainAsk.ask("What is the status of " + filepath + "?"), actualfile + " is a dirty repo")   
+        self.assertEqual(mainAsk.ask("What is the status of " + os.getcwd() + filepath + "?"), actualfile + " is a dirty repo")   
+
 
     @mock.patch('subprocess.Popen')
     def test_file_path_status_not_checked(self, m):
@@ -262,7 +264,7 @@ class GitCoverage(TestCase):
         process_mock.configure_mock(**attrs)
         m.return_value = process_mock 
 
-        self.assertEqual(mainAsk.ask("What is the status of " + filepath + "?"), actualfile + " has been not been checked in")   
+        self.assertEqual(mainAsk.ask("What is the status of " + os.getcwd() + filepath + "?"), actualfile + " has been not been checked in")   
 
     @mock.patch('subprocess.Popen')
     def test_file_path_status_modified_locally(self, m):
@@ -273,7 +275,7 @@ class GitCoverage(TestCase):
         process_mock.configure_mock(**attrs)
         m.return_value = process_mock 
 
-        self.assertEqual(mainAsk.ask("What is the status of " + filepath + "?"), actualfile + " has been modified locally")   
+        self.assertEqual(mainAsk.ask("What is the status of " + os.getcwd() + filepath + "?"), actualfile + " has been modified locally")   
 
     @mock.patch('subprocess.Popen')
     def test_file_path_deal_with(self, m):
@@ -285,7 +287,7 @@ class GitCoverage(TestCase):
         process_mock.configure_mock(**attrs)
         m.return_value = process_mock 
 
-        self.assertEqual(mainAsk.ask("What is the deal with " + filepath + "?"), fakestats)   
+        self.assertEqual(mainAsk.ask("What is the deal with " +  os.getcwd() + filepath + "?"), fakestats)   
 
     @mock.patch('subprocess.Popen')
     def test_file_path_repo_branch(self, m):
@@ -296,7 +298,7 @@ class GitCoverage(TestCase):
         process_mock.configure_mock(**attrs)
         m.return_value = process_mock 
 
-        self.assertEqual(mainAsk.ask("What branch is " + filepath + "?"), "branchname1")   
+        self.assertEqual(mainAsk.ask("What branch is " +  os.getcwd() + filepath + "?"), "branchname1")   
         
     @mock.patch('subprocess.Popen')
     def test_file_path_repo_url(self, m):
@@ -307,18 +309,46 @@ class GitCoverage(TestCase):
         process_mock.configure_mock(**attrs)
         m.return_value = process_mock 
 
-        self.assertEqual(mainAsk.ask("Where did " + filepath + " come from?"), "https://github.com/OregonTech/repo1")   
-    
-    def test_file_check_valid_path(self):
-        with self.assertRaises(Exception):
-            mainAsk.ask("What is the status of /uuuu##/*#/#?")
-
-
+        self.assertEqual(mainAsk.ask("Where did " +  os.getcwd() + filepath + " come from?"), "https://github.com/OregonTech/repo1")   
+        
+        
     @mock.patch('subprocess.Popen')
-    def test_absolute_path(self, m):
+    def test_file_path_status_dirty_repo_untracked(self, m):
+        filepath = "/test/main_test.py"
+        actualfile = "main_test.py"
         process_mock = mock.Mock()
-        attrs = {'communicate.side_effect' : [('',''), ('',''), (os.getcwd() + '/test/main_test.pyc',''), ('','')]}
+        attrs = {'communicate.side_effect' : [ ("", ''), ('', ''), ('', ''), ('', ''), ('', ''), ('main_test.py', ''),('', ''),('', '')  ]}
         process_mock.configure_mock(**attrs)
         m.return_value = process_mock 
 
-        self.assertEqual(mainAsk.ask("Is the test/main_test.PYC in the repo?"), "No")
+        self.assertEqual(mainAsk.ask("What is the status of " + os.getcwd() + filepath + "?"), actualfile + " is a dirty repo")  
+        
+
+    @mock.patch('subprocess.Popen')
+    def test_git_output_error(self, m):
+        filepath = "/test/main_test.py"
+        actualfile = "main_test.py"
+        process_mock = mock.Mock()
+        attrs = {'communicate.side_effect' : [ ("", 'AAA ERROR'), ('', ''), ('', ''), ('', ''), ('', ''), ('main_test.py', ''),('', ''),('', '')  ]}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        self.assertEqual(mainAsk.ask("What is the status of " + os.getcwd() + filepath + "?"), actualfile + " is a dirty repo")  
+        
+        
+    @mock.patch('subprocess.Popen')
+    def test_git_execute_error(self, m):
+        filepath = "/test/main_test.py"
+        actualfile = "main_test.py"
+        process_mock = mock.Mock()
+        attrs = {'communicate.side_effect' : [ ("", 'AAA ERROR'), ('', ''), ('', ''), ('', ''), ('', ''), ('main_test.py', ''),('', ''),('', '')  ]}
+        process_mock.configure_mock(**attrs)
+        m.return_value = process_mock 
+
+        with self.assertRaises(Exception):
+            mainAsk.ask("What is the status of " + filepath + "?")  
+        
+    def test_file_check_valid_path(self):
+        with self.assertRaises(Exception):
+            mainAsk.ask("What is the status of /uuugarbaggeu##/*#/.#?")
+
