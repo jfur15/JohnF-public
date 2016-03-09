@@ -42,63 +42,24 @@ def leapyear():
 class Interface(object):
     
     def __init__(self):
-        self.how_dict = {}
-        self.what_dict = {}
-        self.where_dict = {}
-        self.who_dict = {}
+        self.set_variables()
+        self.log_file = open('question_log.txt', 'w')
 
-        self.keywords = ['How', 'What', 'Where', 'Who', "Why", "Is"]
-        
-        self.weight_units = {'pounds' : 453.59237 , 'ounces' :  28.3495231, 'grams' : 1, 'kilograms' : 100}
-
-        self.length_units = {'feet' : 304.8, 'inches' : 25.4, 'centimeters' : 1 , 'meters' : 100, 'yards' : 914.4, 'miles' : 1609344}
-        
-        self.conversion_keywords = copy.deepcopy(self.weight_units)
-        
-        for unit in self.length_units:
-            self.conversion_keywords[unit] = self.length_units[unit]
-
-        self.question_mark = chr(0x3F)
-        
-        self.question_answers = {
-            'What type of triangle is ': QA('What type of triangle is ', get_triangle_type),
-            'What type of quadrilateral is ': QA('What type of quadrilateral is ', get_quadrilateral_type),
-            'What time is it' : QA('What time is it', time.strftime("%c")),
-            'What is digit X of pi': QA('What is digit X of pi', xpi),
-            'What is digit X of fibonacci': QA('What is digit X of fibonacci', xfibo),
-            'What is the square root of X': QA("What is the square root of X", sqrt),
-            'What is the cubic root of X': QA("What is the cubic root of X", cbrt),
-            'What is the next leap year': QA("What is the next leap year", leapyear),
-            'What is my username': QA("What is my username", self.usernamecheck),
-            'What unit do measure': QA("What unit do measure", self.unitcheck),
-            'Is the FP in the repo': QA("Is the FP in the repo", source.git_utils.is_file_in_repo),
-            'What is the status of FP': QA("What is the status of FP", source.git_utils.get_git_file_info),
-            'What is the deal with FP': QA("What is the deal with FP", source.git_utils.get_file_info),
-            'What branch is FP': QA("What branch is FP", source.git_utils.get_repo_branch),
-            'Where did FP come from': QA("Where did FP come from", source.git_utils.get_repo_url),
-        }
-        
-        self.last_question = None
-        self.username = None
-        
-        self.command_answers = {
-            'Please clear memory': QA('Please clear memory', self.__init__),
-            'Open the door hal': QA('Open the door hal', self.haloutput),
-            'Don\'t do anything': QA('Don\t do anything', "OK"),
-        }
-
-        
     def ask(self, question=""):
         if not isinstance(question, str):
             self.last_question = None
             raise Exception('Not A String!')
-            
+        self.log_file.write("\nQ:  " + str(question)+ "\n    A:  ")
+        
         if question in self.command_answers:
             answer = self.command_answers[question]
             if answer.function is None:
+                self.log_file.write(str(answer.value)+"\n")
                 return answer.value
             else:
-                return answer.function()
+                return_value = answer.function()
+                self.log_file.write(str(return_value) + "\n")
+                return return_value
         else:
             
             filepath = ""
@@ -111,9 +72,12 @@ class Interface(object):
 
             if (question[-1] != self.question_mark or question.split(' ')[0] not in self.keywords):
                 if question.split(' ')[0] == "Convert":
-                    return self.conversion(question)
+                    return_value = self.conversion(question)
+                    self.log_file.write(str(return_value) + "\n")
+                    return return_value
                 else:
                     self.last_question = None
+                    self.log_file.write(NOT_A_QUESTION_RETURN + "\n")
                     return NOT_A_QUESTION_RETURN
             else:
                 parsed_question = ""
@@ -124,26 +88,32 @@ class Interface(object):
                     except:
                         parsed_question += "{0} ".format(keyword)
                         if keyword in self.length_units or keyword in self.weight_units:
-                            return self.unitcheck(keyword)
+                            return_value = self.unitcheck(keyword)
+                            self.log_file.write(str(return_value) + "\n:")
+                            return return_value
                 parsed_question = parsed_question[0:-1]
                 self.last_question = parsed_question
+                
                 for answer in self.question_answers.values():
                     if difflib.SequenceMatcher(a=answer.question, b=parsed_question).ratio() >= .90:
                         if answer.function is None:
+                            self.log_file.write(str(answer.value)+"\n")
                             return answer.value
                         else:
-                            '''try:
+                            try:
                                 if filepath != "":
-                                    return answer.function(filepath)
+                                    return_value = answer.function(filepath)
+                                    self.log_file.write(str(return_value) + "\n")
+                                    return return_value
                                 else:
-                                    return answer.function(*args)
+                                    return_value = answer.function(*args)
+                                    self.log_file.write(str(return_value) + "\n")
+                                    return return_value
                             except:
-                                raise Exception("Too many extra parameters")'''
-                            if filepath != "":
-                                return answer.function(filepath)
-                            else:
-                                return answer.function(*args)
+                                self.log_file.write("Too many extra parameters\n")
+                                raise Exception("Too many extra parameters")
                 else:
+                    self.log_file.write(UNKNOWN_QUESTION + "\n")
                     return UNKNOWN_QUESTION
                     
                     
@@ -233,3 +203,48 @@ class Interface(object):
             if x == ".":
                 return True
         return False
+    def set_variables(self):
+        self.how_dict = {}
+        self.what_dict = {}
+        self.where_dict = {}
+        self.who_dict = {}
+
+        self.keywords = ['How', 'What', 'Where', 'Who', "Why", "Is"]
+        
+        self.weight_units = {'pounds' : 453.59237 , 'ounces' :  28.3495231, 'grams' : 1, 'kilograms' : 100}
+
+        self.length_units = {'feet' : 304.8, 'inches' : 25.4, 'centimeters' : 1 , 'meters' : 100, 'yards' : 914.4, 'miles' : 1609344}
+        
+        self.conversion_keywords = copy.deepcopy(self.weight_units)
+        
+        for unit in self.length_units:
+            self.conversion_keywords[unit] = self.length_units[unit]
+
+        self.question_mark = chr(0x3F)
+        
+        self.question_answers = {
+            'What type of triangle is ': QA('What type of triangle is ', get_triangle_type),
+            'What type of quadrilateral is ': QA('What type of quadrilateral is ', get_quadrilateral_type),
+            'What time is it' : QA('What time is it', time.strftime("%c")),
+            'What is digit X of pi': QA('What is digit X of pi', xpi),
+            'What is digit X of fibonacci': QA('What is digit X of fibonacci', xfibo),
+            'What is the square root of X': QA("What is the square root of X", sqrt),
+            'What is the cubic root of X': QA("What is the cubic root of X", cbrt),
+            'What is the next leap year': QA("What is the next leap year", leapyear),
+            'What is my username': QA("What is my username", self.usernamecheck),
+            'What unit do measure': QA("What unit do measure", self.unitcheck),
+            'Is the FP in the repo': QA("Is the FP in the repo", source.git_utils.is_file_in_repo),
+            'What is the status of FP': QA("What is the status of FP", source.git_utils.get_git_file_info),
+            'What is the deal with FP': QA("What is the deal with FP", source.git_utils.get_file_info),
+            'What branch is FP': QA("What branch is FP", source.git_utils.get_repo_branch),
+            'Where did FP come from': QA("Where did FP come from", source.git_utils.get_repo_url),
+        }
+        
+        self.last_question = None
+        self.username = None
+        
+        self.command_answers = {
+            'Please clear memory': QA('Please clear memory', self.set_variables),
+            'Open the door hal': QA('Open the door hal', self.haloutput),
+            'Don\'t do anything': QA('Don\t do anything', "OK"),
+        }

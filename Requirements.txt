@@ -53,3 +53,9 @@
 #0102 The system shall return '<hash>, <date modified>, <author>' when asked 'What is the deal with <file path>?
 #0103 The system shall return the repo branch when asked 'What branch is <file path>?
 #0104 The system shall return the repo url when asked 'Where did <file path> come from?
+
+#0050 When asked a question the system shall output the question to a log file
+
+#0051 When asked a question the system shall output the answer to a log file
+
+#0051 The system shall output questions and answers to the log file in under 50 ms

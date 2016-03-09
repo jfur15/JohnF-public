@@ -352,3 +352,43 @@ class GitCoverage(TestCase):
         with self.assertRaises(Exception):
             mainAsk.ask("What is the status of /uuugarbaggeu##/*#/.#?")
 
+class PerformanceTests(TestCase):
+    @requirements(['#0051']) 
+    def test_perf_basic_question(self):
+        start = time.time()
+        mainAsk.ask("What time is it?")
+        end = time.time()
+        print end-start
+        self.assertTrue(end-start <= .05)
+        
+    @requirements(['#0051']) 
+    def test_perf_question_without_answer(self):
+        start = time.time()
+        mainAsk.ask("Please clear memory")
+        end = time.time()
+        print end-start
+        self.assertTrue(end-start <= .05)
+        
+    @requirements(['#0051']) 
+    def test_perf_small_complex_question(self):
+        start = time.time()
+        mainAsk.ask("Convert 200 pounds to ounces")
+        end = time.time()
+        print end-start
+        self.assertTrue(end-start <= .05)
+        
+    @requirements(['#0051']) 
+    def test_perf_larger_question(self):
+        start = time.time()
+        mainAsk.ask("What is digit 10 of fibonacci?")
+        end = time.time()
+        print end-start
+        self.assertTrue(end-start <= .05)
+        
+    @requirements(['#0051']) 
+    def test_perf_improbable_question(self):
+        start = time.time()
+        mainAsk.ask("What is digit 20 of fibonacci?")
+        end = time.time()
+        print end-start
+        self.assertTrue(end-start <= .05)

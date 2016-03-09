@@ -22,6 +22,8 @@
 #0010 - ['test_question_spaces']
 #0013 - ['test_question_function_answer']
 #0012 - ['test_question_function_input']
+#0051 - ['test_perf_basic_question', 'test_perf_improbable_question', 'test_perf_larger_question', 'test_perf_question_without_answer', 'test_perf_small_complex_question']
+#0050 - []
 #0019 - ['test_question_updating']
 #0018 - ['test_question_teaching_refuse']
 When I ask "When is the next leap year" I want to receive the answer of the date
