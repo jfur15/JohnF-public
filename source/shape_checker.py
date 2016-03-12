@@ -2,8 +2,12 @@
 :mod:`source.source1` -- Example source code
 ============================================
 
-The following example code determines if a set of 3 sides of a triangle is equilateral, scalene or iscoceles
+The following example code determines if a set of 3 sides of a triangle
+is equilateral, scalene or iscoceles
 """
+# pylint:disable=undefined-variable
+# ^ pylint is displaying all variables as undefined.
+
 def get_triangle_type(a=0, b=0, c=0):
     """
     Determine if the given triangle is equilateral, scalene or Isosceles
@@ -33,7 +37,8 @@ def get_triangle_type(a=0, b=0, c=0):
         b = values[1]
         c = values[2]
 
-    if not (isinstance(a, (int, float)) and isinstance(b, (int, float)) and isinstance(c, (int, float))):
+    if not (isinstance(a, (int, float)) and isinstance(b, (int, float))
+            and isinstance(c, (int, float))):
         return "invalid"
 
     if a <= 0 or b <= 0 or c <= 0:
@@ -59,10 +64,10 @@ def get_quadrilateral_type(a=0, b=0, c=0, d=0):
 
     :param c: line c
     :type c: float
-    
+
 	:param d: line d
     :type d: float
-    
+
     :return: "square", "rectangle" or "invalid"
     :rtype: str
     """
@@ -81,7 +86,8 @@ def get_quadrilateral_type(a=0, b=0, c=0, d=0):
         c = values[2]
         d = values[3]
 
-    if not (isinstance(a, (int, float)) and isinstance(b, (int, float)) and isinstance(c, (int, float)) and isinstance(d, (int, float))):
+    if not (isinstance(a, (int, float)) and isinstance(b, (int, float))
+            and isinstance(c, (int, float)) and isinstance(d, (int, float))):
         return "invalid"
 
     if a <= 0 or b <= 0 or c <= 0 or d <= 0:
@@ -89,14 +95,14 @@ def get_quadrilateral_type(a=0, b=0, c=0, d=0):
 
     if a == b and b == c and c == d:
         return "square"
-        
+
     elif a == c and b == d:
         return "rectangle"
     else:
         return "invalid"
-	
+
 def get_quadrilateral_angle_type(a=0, b=0, c=0, d=0, aa=0, ba=0, ca=0, da=0):
-    """    
+    """
     :return: "square", "rectangle", "rhombus", "disconnected", or "invalid"
     :rtype: str
     """
@@ -114,7 +120,7 @@ def get_quadrilateral_angle_type(a=0, b=0, c=0, d=0, aa=0, ba=0, ca=0, da=0):
         b = values[1]
         c = values[2]
         d = values[3]
-    
+
     if isinstance(aa, (tuple, list)) and len(aa) == 4:
         da = aa[3]
         ca = aa[2]
@@ -130,18 +136,21 @@ def get_quadrilateral_angle_type(a=0, b=0, c=0, d=0, aa=0, ba=0, ca=0, da=0):
         ca = values[2]
         da = values[3]
 
-    if not (isinstance(a, (int, float)) and isinstance(b, (int, float)) and isinstance(c, (int, float)) and isinstance(d, (int, float))):
+    if not (isinstance(a, (int, float)) and isinstance(b, (int, float))
+            and isinstance(c, (int, float)) and isinstance(d, (int, float))):
         return "invalid"
-        
-    if not (isinstance(aa, (int)) and isinstance(ba, (int)) and isinstance(ca, (int)) and isinstance(da, (int))):
+
+    if not (isinstance(aa, (int)) and isinstance(ba, (int))
+            and isinstance(ca, (int)) and isinstance(da, (int))):
         return "invalid"
-        
-    if a <= 0 or b <= 0 or c <= 0 or d <= 0 or aa <= 0 or ba <= 0 or ca <= 0 or da <= 0:
+
+    if a <= 0 or b <= 0 or c <= 0 or d <= 0 or aa <= 0 or \
+        ba <= 0 or ca <= 0 or da <= 0:
         return "invalid"
     if aa > 180 or ba > 180 or ca > 180 or da > 180:
         return "invalid"
 
-        
+
     if a == b and b == c and c == d:
         if aa == 90 and ba == 90 and ca == 90 and da == 90:
             return "square"
@@ -149,7 +158,7 @@ def get_quadrilateral_angle_type(a=0, b=0, c=0, d=0, aa=0, ba=0, ca=0, da=0):
             return "rhombus"
         else:
             return "disconnected"
-        
+
     elif a == c and b == d:
         if aa == 90 and ba == 90 and ca == 90 and da == 90:
             return "rectangle"
@@ -157,4 +166,3 @@ def get_quadrilateral_angle_type(a=0, b=0, c=0, d=0, aa=0, ba=0, ca=0, da=0):
             return "disconnected"
     else:
         return "invalid"
-	

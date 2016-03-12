@@ -16,7 +16,7 @@ NO_TEACH = 'I don\'t know about that. I was taught differently'
 def xpi(x):
     pi = "31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348"
     return pi[int(x-1)]
-    
+
 def xfibo(x):
     x = int(x)
     if x < 2:
