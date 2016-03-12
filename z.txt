@@ -107,7 +107,7 @@ Messages by category
 +-----------+-------+---------+-----------+
 |refactor   |0      |0        |=          |
 +-----------+-------+---------+-----------+
-|warning    |0      |2        |-2.00      |
+|warning    |0      |0        |=          |
 +-----------+-------+---------+-----------+
 |error      |0      |0        |=          |
 +-----------+-------+---------+-----------+
@@ -127,7 +127,7 @@ Messages
 
 Global evaluation
 -----------------
-Your code has been rated at 10.00/10 (previous run: 9.93/10, +0.07)
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 Statistics by type
 ------------------

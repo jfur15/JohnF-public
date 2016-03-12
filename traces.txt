@@ -1,64 +1,64 @@
-#0006 - []
-#0007 - []
+#0006 - ['test_question_input']
+#0007 - ['test_question_input_how', 'test_question_input_what', 'test_question_input_where', 'test_question_input_who', 'test_question_input_why']
 #0004 - ['test_get_quadrilateral_angle_square_all_float']
 #0005 - ['test_get_quadrilateral_angle_invalid_angletype_all_int']
 #0002 - ['test_get_triangle_equilateral_all_float']
 #0003 - ['test_get_quadrilateral_angle_invalid_range_all_int', 'test_get_quadrilateral_angle_rectangle_all_int', 'test_get_quadrilateral_angle_rhombus_all_int', 'test_get_quadrilateral_angle_square_all_int']
 #0001 - ['test_get_triangle_equilateral_all_int', 'test_get_triangle_isosceles_all_int', 'test_get_triangle_scalene_all_int']
-#0020 - []
-#0021 - []
-#0008 - []
-#0009 - []
+#0020 - ['test_question_correcting_teaching']
+#0021 - ['test_question_correcting_none']
+#0008 - ['test_no_question_keyword']
+#0009 - ['test_no_question_mark']
 #0104 - []
 #0103 - []
 #0102 - []
 #0101 - []
 #0100 - []
-#0015 - []
-#0014 - []
-#0017 - []
-#0016 - []
-#0011 - []
-#0010 - []
-#0013 - []
-#0012 - []
-#0051 - []
+#0015 - ['test_question_teaching']
+#0014 - ['test_question_function_no_match']
+#0017 - ['test_question_teaching_none']
+#0016 - ['test_question_function_teaching']
+#0011 - ['test_question_keywords']
+#0010 - ['test_question_spaces']
+#0013 - ['test_question_function_answer']
+#0012 - ['test_question_function_input']
+#0051 - ['test_perf_basic_question', 'test_perf_improbable_question', 'test_perf_larger_question', 'test_perf_question_without_answer', 'test_perf_small_complex_question']
 #0050 - []
-#0019 - []
-#0018 - []
+#0019 - ['test_question_updating']
+#0018 - ['test_question_teaching_refuse']
 When I ask "When is the next leap year" I want to receive the answer of the date
-[]
+test_leap_year_job_story
 
 When I ask "What is the cube root of x", I want to receive the answer rounded to 3 decimal places
-[]
+test_cube_root_job_story
 
 When I ask for a numberic conversion I want at least 10 different units I can convert from/to
-[]
+test_converted_value_job_story
 
 When I ask "Please clear memory" I was the application to clear user set questions and answers so I can reset the application
-[]
+test_memory_job_story
 
 When I ask "What is the n digit of pi" I want to receive the answer so I don't have to figure it out myself
-[]
+test_pi_job_story
 
 When I ask "What do ____ measure", I want to know what the unit measures
-[]
+test_measurement_job_story
 
 When I ask "What time is it?" I want to be given the current date/time so I can stay up to date
-[]
+test_time_job_story
 
 When I ask "What is the n digit of fibonacci" I want to receive the answer so I don't have to figure it out myself
-[]
+test_fibo_job_story
 
 When I say "Open the door hal", I want the application to say "I'm afraid I can't do that (user name) so I know that is not an option
-[]
+test_open_door_user_job_story
 
 When I ask "What is my username" I want to receieve an answer or an error
-[]
+test_username_job_story
 
 When I ask "Convert <number> <units> to <units>" I want to receive the converted value and units so I can know the answer.
-[]
+test_converted_value_job_story
 
 When I ask "What is the square root of x" I want to recieve the answer so I don't have to figure it out myself
-[]
+test_square_root_job_story
 

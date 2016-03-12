@@ -408,7 +408,7 @@ class GitCoverage(TestCase):
         actualfile = "main_test.py"
         process_mock = mock.Mock()
         attrs = {'communicate.side_effect' : [("", 'AAA ERROR'), ('', ''), \
-                ('', ''), ('', ''), ('', ''), ('main_test.py', ''), b('', ''), \
+                ('', ''), ('', ''), ('', ''), ('main_test.py', ''), ('', ''), \
                 ('', '')]}
         process_mock.configure_mock(**attrs)
         m.return_value = process_mock
